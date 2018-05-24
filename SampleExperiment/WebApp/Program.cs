@@ -1,25 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 
 namespace WebApp
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
-        }
+            var builder = new WebHostBuilder()
+                .UseUrls("http://localhost:4324")
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseMonitoring()
+                 .ConfigureAppConfiguration((hostBuilderContext, confBuilder) =>
+                 {
+                     confBuilder
+                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                         .AddJsonFile($"appsettings.{hostBuilderContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                         .AddEnvironmentVariables();
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                 })
+                .UseKestrel()
+                .UseStartup<Startup>();
+
+            builder.Build().Run();
+        }
     }
 }
