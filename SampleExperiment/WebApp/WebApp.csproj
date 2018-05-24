@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CK.AspNet.Auth" Version="1.1.0-rc" />
+    <PackageReference Include="CK.DB.AspNet.Auth" Version="1.1.0-rc" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
