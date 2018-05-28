@@ -35,7 +35,6 @@ namespace WebApp
                      options.SlidingExpirationTime = TimeSpan.FromHours( 1 );
                  } );
 
-
             if (_env.IsDevelopment())
             {
                 string dllPath = _configuration["StObjMap:Path"];
@@ -46,11 +45,12 @@ namespace WebApp
                     File.Copy( dllPath, Path.Combine( AppContext.BaseDirectory, "CK.StObj.AutoAssembly.dll" ), overwrite: true );
                 }
             }
-            services.AddDefaultStObjMap( "CK.StObj.AutoAssembly" );
+            services.AddDefaultStObjMap( "CK.StObj.AutoAssembly", "Server=.;Database=CKTEST_SampleExperiment_Data;Trusted_Connection=True;" );
 
             services.AddSingleton<IAuthenticationTypeSystem, StdAuthenticationTypeSystem>();
             services.AddSingleton<IWebFrontAuthLoginService, SqlWebFrontAuthLoginService>();
 
+            services.AddCors();
         }
 
         public void Configure( IApplicationBuilder app, IHostingEnvironment env )
@@ -59,12 +59,8 @@ namespace WebApp
 
             app.UseAuthentication();
 
-            app.Run( async context =>
-             {
-                 var monitor = context.GetRequestMonitor();
-                 monitor.Info( "Monitor is available." );
-                 await context.Response.WriteAsync( "Hello World!" );
-             } );
+            app.UseCors( builder =>
+            builder.WithOrigins( "localhost" ).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin() );
         }
 
     }
