@@ -17,7 +17,8 @@ namespace WebApp
     {
         readonly IConfiguration _configuration;
         readonly IHostingEnvironment _env;
-
+        const string _connectionString =
+            "Server=.;Database=CKTEST_SampleExperiment_Data;Trusted_Connection=True;";
 
         public Startup( IConfiguration configuration, IHostingEnvironment env )
         {
@@ -45,7 +46,7 @@ namespace WebApp
                     File.Copy( dllPath, Path.Combine( AppContext.BaseDirectory, "CK.StObj.AutoAssembly.dll" ), overwrite: true );
                 }
             }
-            services.AddDefaultStObjMap( "CK.StObj.AutoAssembly", "Server=.;Database=CKTEST_SampleExperiment_Data;Trusted_Connection=True;" );
+            services.AddDefaultStObjMap( "CK.StObj.AutoAssembly", _connectionString );
 
             services.AddSingleton<IAuthenticationTypeSystem, StdAuthenticationTypeSystem>();
             services.AddSingleton<IWebFrontAuthLoginService, SqlWebFrontAuthLoginService>();
